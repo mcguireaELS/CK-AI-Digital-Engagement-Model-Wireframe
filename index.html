@@ -274,10 +274,38 @@
     .landing h1{font-size:28px;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+  /* ---------- xAPI: LRS status badge ---------- */
+  .lrs-badge{display:inline-flex;align-items:center;gap:10px;font-size:12px;
+    padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:var(--canvas);}
+  .lrs-badge .lrs-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);flex:none;}
+  .lrs-badge.live .lrs-dot{background:#2f9e5b;box-shadow:0 0 0 3px rgba(47,158,91,.18);}
+  .lrs-badge.sending .lrs-dot{background:#c98a1a;box-shadow:0 0 0 3px rgba(201,138,26,.18);}
+  .lrs-badge.error .lrs-dot{background:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.18);}
+  .lrs-badge .lrs-status{font-weight:600;color:var(--ink);}
+  .lrs-badge .lrs-email{color:var(--muted);border-left:1px solid var(--line);padding-left:10px;
+    max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lrs-badge .lrs-count{font-family:var(--mono);font-size:11px;color:var(--faint);}
+
+  /* ---------- xAPI: email gate ---------- */
+  .gate-wrap{min-height:58vh;display:grid;place-items:center;padding:40px 0;}
+  .gate{max-width:460px;width:100%;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:34px 32px;}
+  .gate h1{font-size:26px;margin:8px 0 8px;letter-spacing:-0.01em;}
+  .gate p{font-size:14px;color:var(--muted);margin:0 0 18px;}
+  .gate-form{display:flex;gap:10px;flex-wrap:wrap;}
+  .gate-form input{flex:1;min-width:220px;padding:11px 13px;border:1px solid var(--line-strong);
+    border-radius:6px;font-family:inherit;font-size:14px;background:var(--canvas);}
+  .gate-form button{background:var(--accent);color:#fff;border:none;border-radius:6px;
+    padding:11px 22px;font-size:14px;font-weight:600;cursor:pointer;}
+  .gate-form button:hover{filter:brightness(1.06);}
+  .gate-err{color:#c0392b;font-size:12.5px;margin:10px 0 0;display:none;}
+  .gate-err.show{display:block;}
+  .gate-note{font-size:11.5px;color:var(--faint);margin:16px 0 0;line-height:1.5;}
+
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 </head>
-<body data-screen="landing">
+<body data-screen="gate">
   <div class="fidelity-strip">Wireframe · low fidelity · structure &amp; flow only — visual design comes later</div>
 
   <header class="topbar">
@@ -290,6 +318,12 @@
     </div>
     <span class="role-chip" id="roleChip">—</span>
     <span class="spacer"></span>
+    <span id="lrs-badge" class="lrs-badge" style="display:none">
+      <span class="lrs-dot"></span>
+      <span class="lrs-status">LRS idle</span>
+      <span class="lrs-email"></span>
+      <span class="lrs-count">0 sent</span>
+    </span>
     <a class="tlink" href="https://www.elsevier.support/clinicalkeyai" target="_blank" rel="noopener">Need help? Support Center ↗</a>
     <button class="notes-toggle" data-action="toggle-notes"><span class="dot"></span>Design notes</button>
   </header>
@@ -348,13 +382,98 @@
   };
 
   // ---- State (in-memory only — no browser storage) ----
-  var state = { screen:"landing", role:null, idx:0, done:{}, notes:false, indexOpen:false };
+  var state = { screen:"gate", role:null, idx:0, done:{}, notes:false, indexOpen:false, email:null, sent:0, lrsStatus:"idle" };
 
   var app = document.getElementById("app");
   var roleChip = document.getElementById("roleChip");
 
+  // ================= xAPI / SCORM Cloud LRS =================
+  // Sandbox credentials for prototyping only. A browser-visible secret is fine
+  // for a disposable sandbox; for production, move sending behind a server-side
+  // proxy (e.g., a Lambda) and call that endpoint here instead.
+  var LRS = {
+    endpoint: "https://cloud.scorm.com/lrs/O3BIJIXPN6/sandbox/",
+    key: "ltXfHLwdS_KWopX2Gso",
+    secret: "wUXpqaFhHALMow-3Bxo"
+  };
+  var AUTH = "Basic " + btoa(LRS.key + ":" + LRS.secret);
+  var ACT_BASE = "https://elsevier-health.github.io/ckai-hub/";
+
+  var VERBS = {
+    initialized:{id:"http://adlnet.gov/expapi/verbs/initialized",display:{"en-US":"initialized"}},
+    selected:{id:"http://id.tincanapi.com/verb/selected",display:{"en-US":"selected"}},
+    experienced:{id:"http://adlnet.gov/expapi/verbs/experienced",display:{"en-US":"experienced"}},
+    completed:{id:"http://adlnet.gov/expapi/verbs/completed",display:{"en-US":"completed"}},
+    downloaded:{id:"http://id.tincanapi.com/verb/downloaded",display:{"en-US":"downloaded"}}
+  };
+
+  function actor(){
+    return { objectType:"Agent", name: state.email || "Anonymous",
+      mbox: "mailto:" + (state.email || "anonymous@example.com") };
+  }
+  function activity(idPath, name){
+    return { objectType:"Activity", id: ACT_BASE + idPath, definition:{ name:{"en-US":name} } };
+  }
+  function slug(x){ return String(x).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
+
+  var badgeEl = document.getElementById("lrs-badge");
+  function setLrs(status){ state.lrsStatus = status; updateBadge(); }
+  function updateBadge(){
+    if(!badgeEl) return;
+    if(state.email){ badgeEl.style.display = "inline-flex"; }
+    badgeEl.className = "lrs-badge" + (state.lrsStatus !== "idle" ? " " + state.lrsStatus : "");
+    var label = state.lrsStatus === "live" ? "LRS live"
+              : state.lrsStatus === "sending" ? "Sending…"
+              : state.lrsStatus === "error" ? "LRS error" : "LRS idle";
+    badgeEl.querySelector(".lrs-status").textContent = label;
+    badgeEl.querySelector(".lrs-email").textContent = state.email || "";
+    badgeEl.querySelector(".lrs-count").textContent = state.sent + " sent";
+  }
+
+  function xapi(verb, object){
+    setLrs("sending");
+    sendStatement({ actor: actor(), verb: verb, object: object }).then(function(ok){
+      if(ok){ state.sent++; setLrs("live"); } else { setLrs("error"); }
+    }).catch(function(){ setLrs("error"); });
+  }
+
+  // Standard request first; fall back to the CORS-safe form-encoded syntax.
+  function sendStatement(stmt){
+    return fetch(LRS.endpoint + "statements", {
+      method:"POST",
+      headers:{ "Authorization":AUTH, "Content-Type":"application/json", "X-Experience-API-Version":"1.0.3" },
+      body: JSON.stringify(stmt)
+    }).then(function(r){ return r.ok; }).catch(function(){
+      var p = new URLSearchParams();
+      p.set("method","POST"); p.set("Authorization",AUTH);
+      p.set("X-Experience-API-Version","1.0.3"); p.set("Content-Type","application/json");
+      p.set("content", JSON.stringify(stmt));
+      return fetch(LRS.endpoint + "statements", {
+        method:"POST",
+        headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+        body: p.toString()
+      }).then(function(r2){ return r2.ok; }).catch(function(){ return false; });
+    });
+  }
+  // ==========================================================
+
   function note(tag, html){
     return '<div class="note"><span class="tag">'+tag+'</span>'+html+'</div>';
+  }
+
+  // ---------- EMAIL GATE ----------
+  function gate(){
+    return '<div class="wrap gate-wrap"><div class="gate">'+
+      '<span class="eyebrow">ClinicalKey AI · Onboarding &amp; Enablement</span>'+
+      '<h1>Welcome</h1>'+
+      '<p>Enter your email to begin. We use it to record your progress as you move through the hub.</p>'+
+      '<div class="gate-form">'+
+        '<input id="gate-email" type="email" placeholder="you@institution.org" aria-label="Email" />'+
+        '<button data-action="submit-email">Begin →</button>'+
+      '</div>'+
+      '<p id="gate-err" class="gate-err">Please enter a valid email address.</p>'+
+      '<p class="gate-note">Prototype — sends xAPI statements to a SCORM Cloud sandbox LRS. The badge in the top-right shows the live connection, the captured email, and how many statements have been sent.</p>'+
+    '</div></div>';
   }
 
   // ---------- LANDING ----------
@@ -438,8 +557,8 @@
         '<button class="btn-prev" data-action="prev"'+(isFirst?" disabled":"")+'>← Previous</button>'+
         '<button class="btn-next" data-action="next">'+(isLast?"Finish path":"Mark done & continue")+' →</button>'+
         '<span class="dl-group">'+
-          '<a class="dl" href="#" data-action="noop">Download this section</a>'+
-          '<a class="dl" href="#" data-action="noop">Download full PDF</a>'+
+          '<a class="dl" href="#" data-action="download" data-kind="section">Download this section</a>'+
+          '<a class="dl" href="#" data-action="download" data-kind="full">Download full PDF</a>'+
         '</span>'+
       '</div>'+
       note("Light portability — reader keeps a choice",
@@ -516,13 +635,27 @@
     if(state.role){
       roleChip.textContent = journeys[state.role].label;
     }
-    if(state.screen==="landing") app.innerHTML = landing();
+    if(state.screen==="gate") app.innerHTML = gate();
+    else if(state.screen==="landing") app.innerHTML = landing();
     else if(state.screen==="journey") app.innerHTML = journey();
     else app.innerHTML = done();
+    updateBadge();
     window.scrollTo({top:0,behavior:"auto"});
   }
 
   function handle(action, el){
+    if(action==="submit-email"){
+      var input = document.getElementById("gate-email");
+      var val = input ? input.value.trim() : "";
+      var at = val.indexOf("@"), dot = val.lastIndexOf(".");
+      var ok = at > 0 && dot > at + 1 && dot < val.length - 1;
+      var err = document.getElementById("gate-err");
+      if(!ok){ if(err) err.classList.add("show"); return; }
+      state.email = val;
+      state.screen = "landing";
+      xapi(VERBS.initialized, activity("hub", "ClinicalKey AI Customer Hub"));
+      render(); return;
+    }
     if(action==="toggle-notes"){
       state.notes = !state.notes;
       document.body.classList.toggle("notes-on", state.notes);
@@ -531,17 +664,27 @@
     if(action==="choose-role"){
       state.role = el.getAttribute("data-role");
       state.idx = 0; state.done = {}; state.screen = "journey";
+      xapi(VERBS.selected, activity("path/" + state.role, journeys[state.role].label));
       render(); return;
     }
     if(action==="goto-step"){
       state.idx = parseInt(el.getAttribute("data-idx"),10);
+      var gs = journeys[state.role].steps[state.idx];
+      xapi(VERBS.experienced, activity("path/" + state.role + "/step/" + slug(gs.title), gs.title));
       render(); return;
     }
     if(action==="next"){
-      var total = journeys[state.role].steps.length;
+      var steps = journeys[state.role].steps;
+      var total = steps.length;
+      var doneStep = steps[state.idx];
       state.done[state.idx] = true;
+      xapi(VERBS.completed, activity("path/" + state.role + "/step/" + slug(doneStep.title), doneStep.title));
       if(state.idx < total-1){ state.idx++; render(); }
-      else { state.screen = "done"; render(); }
+      else {
+        state.screen = "done";
+        xapi(VERBS.completed, activity("path/" + state.role, journeys[state.role].label));
+        render();
+      }
       return;
     }
     if(action==="prev"){
@@ -555,6 +698,13 @@
     if(action==="toggle-index"){
       state.indexOpen = !state.indexOpen;
       render(); return;
+    }
+    if(action==="download"){
+      var kind = el.getAttribute("data-kind") === "full" ? "full-pdf" : "section";
+      var ds = journeys[state.role] ? journeys[state.role].steps[state.idx] : null;
+      var objName = (kind === "full-pdf" ? "Full PDF: " : "Section: ") + (ds ? ds.title : "");
+      xapi(VERBS.downloaded, activity("download/" + kind + "/" + (ds ? slug(ds.title) : "item"), objName));
+      return;
     }
     if(action==="noop"){ return; }
   }
