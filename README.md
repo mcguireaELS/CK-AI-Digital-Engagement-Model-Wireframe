@@ -1,99 +1,89 @@
-# ClinicalKey AI — Customer Hub (Wireframe)
+# ClinicalKey AI Customer Hub
 
-An interactive, **low-fidelity** wireframe of a self-service onboarding and enablement hub for ClinicalKey AI customers — built for customers in a self-support tier who don't have a dedicated customer success manager.
+A branded, interactive prototype of a self-service onboarding and enablement hub for ClinicalKey AI customers, built for customers in a self-support tier who do not have a dedicated customer success manager.
 
-It is built as self-contained HTML with no dependencies and no build step. It is intentionally grayscale and un-branded: the goal at this stage is to align on **structure and flow**, not visual design. Design and branding come later.
-
-## Versions
-
-There are two versions of the wireframe:
-
-| File | Purpose |
-|------|---------|
-| `index.html` | The base wireframe. No tracking. Use this for structure/flow review. |
-| `xapi/index.html` | An xAPI-enabled version that captures a learner email and sends xAPI statements to a SCORM Cloud LRS. Use this to demonstrate learning-data capture. |
+It is a single self-contained HTML file plus a folder of brand web fonts. No build step and no framework. This prototype supersedes the earlier grayscale wireframe.
 
 ## Live demo
 
-Once GitHub Pages is enabled (Settings → Pages → deploy from the `main` branch, root), the wireframes are served at:
+Enable GitHub Pages (Settings, then Pages, deploy from the `main` branch, root). The hub is served at:
 
 ```
-Base wireframe:   https://elsevier-health.github.io/REPO-NAME/
-xAPI version:     https://elsevier-health.github.io/REPO-NAME/xapi/
+https://elsevier-health.github.io/REPO-NAME/
 ```
 
-Replace `REPO-NAME` with this repository's name.
+Replace `REPO-NAME` with this repository's name. Deploy `index.html` and the `fonts/` folder together so the brand fonts load.
 
-## What it demonstrates
+## What it includes
 
-- **Two guided paths** — an *Administrator* (deployment) path and a *User* (everyday value) path that share a common intro, then fork.
-- **Inline learning model** — each asset (video, guide, quick sheet) is presented in place as part of the journey rather than as a link out.
-- **Progress and resume** — a step rail tracks where the learner is and what's next.
-- **Browse by concern** — a collapsible "Looking for something specific?" index that deep-links to the relevant step, for learners who just need one thing.
-- **Per-section and full-PDF downloads** — light portability without breaking the journey.
-- **Design notes** — toggle **Design notes** in the upper-right corner to see the rationale behind each decision.
+- Two guided paths, an Administrator (deployment) path and a User (everyday value) path, that share a common intro and then fork.
+- An inline learning model. Assets are presented in place as part of the journey rather than as links out.
+- Progress tracking, a step rail, and a collapsible "Looking for something specific?" index that deep-links to the relevant step.
+- Per-section and full-PDF download options.
+- Email capture on entry, used as the xAPI actor, with a live learning-record status badge.
 
-## xAPI version (`xapi/index.html`)
+## Branding
 
-The xAPI version adds learning-data capture on top of the base wireframe:
+- Type: Tiempos Text (serif, headlines) and National 2 (sans-serif, body and UI), served from `fonts/` via @font-face, with Georgia and Arial as the only fallbacks.
+- Color: the Elsevier palette (Vital Orange, Graphite, White, Ink, Sand, Paper, Action Blue, Ivory) applied per brand rules. Vital Orange is an accent only, Action Blue is for links and CTAs only, Ivory is for lines only.
+- Public hosting of the fonts is cleared by brand and legal, so the woff2 files may be committed and served.
+- The header currently uses a plain-text "Elsevier" stand-in. Replace it with the official logo asset when available. The Non Solus mark is not recreated.
 
-- **Email gate** — on entry, the learner enters an email, which is used as the xAPI actor (`mbox`).
-- **Live status badge** — a badge in the top-right shows the LRS connection state (live / sending / error), the captured email, and a running count of statements sent. It intentionally does *not* show a full statement stream.
-- **Tracked events** — statements are sent for: entering the hub (`initialized`), choosing a path (`selected`), viewing a step (`experienced`), completing a step (`completed`), completing a path (`completed`), and downloading a section or full PDF (`downloaded`).
-- **Transport** — it tries a standard xAPI request first and falls back to the CORS-safe form-encoded syntax, so it works cross-origin from GitHub Pages.
+## xAPI tracking
 
-**Security note.** The xAPI version contains a **SCORM Cloud sandbox** key/secret inline so the prototype works without a backend. This is acceptable only for a disposable sandbox. For any production or customer-facing use, move statement-sending behind a server-side proxy (e.g., an AWS Lambda) so the secret is never exposed in client-side code. Do not point this at a production LRS with an inline secret.
+- Email gate on entry sets the xAPI actor (mbox).
+- A badge in the top right shows the connection state (live, sending, error), the captured email, and a running count of statements sent. There is no full statement stream.
+- Tracked events: entering the hub (initialized), choosing a path (selected), viewing a step (experienced), completing a step (completed), completing a path (completed), and downloading a section or full PDF (downloaded).
+- Transport tries a standard xAPI request first and falls back to the CORS-safe form-encoded syntax, so it works cross-origin from GitHub Pages.
 
-The activity IDs use a base of `https://elsevier-health.github.io/ckai-hub/`. Update that base in `xapi/index.html` to match the actual hosting path so activity IDs are consistent.
+Security note. The prototype contains a SCORM Cloud sandbox key and secret inline so it works without a backend. This is acceptable only for a disposable sandbox. For production, move statement sending behind a server-side proxy so the secret is not exposed in client-side code.
+
+The activity IDs use a base of `https://elsevier-health.github.io/REPO-NAME/`. Update `ACT_BASE` in `index.html` to the real Pages path.
+
+## Embeds
+
+Live embeds wired in to confirm production behavior:
+
+- Introducing ClinicalKey AI: Vimeo video, responsive.
+- Get Started Guide: Frontify document, inline.
+- Earn CME & Redeem MOC Credit: Frontify document, inline.
+
+The remaining steps (FAQ, User Guide, Conversation Sharing, App Guide, and the admin setup guides) show a branded placeholder until their links are added.
+
+The Enhanced ClinicalKey AI and Quarterly Updates steps were removed from both paths.
 
 ## View locally
 
-Open either `index.html` in any modern browser. No server required. (The xAPI version will attempt to reach the LRS; a live connection is needed for statements to send.)
+Open `index.html` in a modern browser with the `fonts/` folder alongside it. Note that the brand fonts and the external embeds render reliably only when the page is hosted, not always in a sandboxed preview.
 
-## Embed in another page (e.g., WordPress)
+## Embed in another page (for example WordPress)
 
-Because interactive JavaScript runs inside the hosted page, you can embed the whole experience with a single iframe — no custom scripts needed on the host page:
+Because interactive JavaScript runs inside the hosted page, embed the whole experience with a single iframe:
 
 ```html
-<!-- Base wireframe -->
 <iframe
   src="https://elsevier-health.github.io/REPO-NAME/"
-  title="ClinicalKey AI Customer Hub wireframe"
-  style="width:100%;height:900px;border:0;"
-  loading="lazy">
-</iframe>
-
-<!-- xAPI version -->
-<iframe
-  src="https://elsevier-health.github.io/REPO-NAME/xapi/"
-  title="ClinicalKey AI Customer Hub (xAPI)"
+  title="ClinicalKey AI Customer Hub"
   style="width:100%;height:900px;border:0;"
   loading="lazy">
 </iframe>
 ```
-
-Adjust `height` to suit the page.
 
 ## Repository structure
 
 ```
 .
-├── index.html          # base wireframe (single self-contained file)
-├── xapi/
-│   └── index.html      # xAPI-enabled version
+├── index.html          # the branded, xAPI-enabled prototype
+├── fonts/              # brand web fonts (woff2)
 ├── README.md
 ├── LICENSE
 └── .gitignore
 ```
 
-## Tech notes
+## Status
 
-Vanilla HTML, CSS, and JavaScript. No frameworks, no external runtime dependencies, no browser storage. State is held in memory for the session.
-
-## Status & context
-
-Prototype for an internal Elsevier Customer Learning project. Under active iteration; structure is approved in principle, with refinements ongoing.
+Prototype for an internal Elsevier Customer Learning project. Pilot targeted for early to mid September.
 
 ## License
 
-Proprietary — see [LICENSE](LICENSE).
+Proprietary. See [LICENSE](LICENSE).
