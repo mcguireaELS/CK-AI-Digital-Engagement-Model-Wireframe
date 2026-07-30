@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ClinicalKey AI Customer Hub</title>
 <style>
-  /* ---------- Brand web fonts ---------- */
   @font-face{font-family:"Tiempos Text";src:url("fonts/tiempos-text-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
   @font-face{font-family:"Tiempos Text";src:url("fonts/tiempos-text-regular-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap;}
   @font-face{font-family:"National 2";src:url("fonts/national-2-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap;}
@@ -16,248 +15,231 @@
   :root{
     --graphite:#1E1E1E; --white:#FFFFFF; --paper:#F7F4EF; --sand:#EEE7D7;
     --ink:#544946; --orange:#FF551D; --blue:#2354FF; --ivory:#E1DFDB;
-    --serif:"Tiempos Text",Georgia,serif;
-    --sans:"National 2",Arial,sans-serif;
-    --radius:10px;
+    --serif:"Tiempos Text",Georgia,serif; --sans:"National 2",Arial,sans-serif;
     --ok:#2f7d4f; --warn:#b0791b; --err:#b23b2e;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    font-family:var(--sans); color:var(--graphite); background:var(--paper);
-    line-height:1.55; letter-spacing:-0.01em; -webkit-font-smoothing:antialiased;
-  }
+  body{font-family:var(--sans); color:var(--graphite); background:var(--paper);
+    line-height:1.55; letter-spacing:-0.01em; -webkit-font-smoothing:antialiased;}
   h1,h2,.serif{font-family:var(--serif); letter-spacing:-0.02em; font-weight:400;}
   h3,h4,h5{font-family:var(--sans); font-weight:700; letter-spacing:-0.01em;}
-  a{color:var(--blue); text-decoration:none;}
-  a:hover{text-decoration:underline;}
+  a{color:var(--blue); text-decoration:none;} a:hover{text-decoration:underline;}
   button{font-family:inherit; cursor:pointer;}
-  .wrap{max-width:1180px; margin:0 auto; padding:0 26px;}
-  .eyebrow{font-size:12.5px; color:var(--ink); letter-spacing:0; margin:0 0 10px;}
+  .wrap{max-width:1160px; margin:0 auto; padding:0 26px;}
+  .jwrap{max-width:1560px; margin:0 auto; padding:0 30px;}
+  .eyebrow{font-size:12.5px; color:var(--ink); margin:0 0 10px;}
 
-  /* ---------- Buttons ---------- */
   .btn-primary{background:var(--blue); color:#fff; border:none; border-radius:8px;
-    padding:12px 22px; font-size:14.5px; font-weight:700; letter-spacing:-0.01em;}
+    padding:12px 22px; font-size:14.5px; font-weight:700;}
   .btn-primary:hover{filter:brightness(1.07);}
   .btn-ghost{background:var(--white); color:var(--graphite); border:1px solid var(--ink);
     border-radius:8px; padding:11px 18px; font-size:14px; font-weight:700;}
   .btn-ghost:disabled{opacity:.4; cursor:not-allowed;}
 
-  /* ---------- Top bar ---------- */
-  .topbar{position:sticky; top:0; z-index:40; background:var(--white);
-    border-bottom:1px solid var(--ivory); }
-  .topbar .inner{max-width:1180px; margin:0 auto; padding:14px 26px;
-    display:flex; align-items:center; gap:16px;}
+  /* Testing notice */
+  .testbar{background:var(--graphite); color:#fff; text-align:center; font-size:12.5px; padding:8px 16px;}
+  .gate-test{background:var(--sand); border-left:3px solid var(--orange); border-radius:8px;
+    padding:12px 14px; font-size:13px; color:var(--graphite); margin:0 0 18px; line-height:1.5;}
+
+  /* Top bar */
+  .topbar{position:sticky; top:0; z-index:40; background:var(--white); border-bottom:1px solid var(--ivory);}
+  .topbar .inner{max-width:1560px; margin:0 auto; padding:14px 30px; display:flex; align-items:center; gap:16px;}
   .brand{display:flex; align-items:center; gap:14px;}
-  .brand .mark{font-size:14px; font-weight:700; color:var(--graphite);
-    padding-right:14px; border-right:1px solid var(--ivory);}
-  .brand .prod{line-height:1.15;}
-  .brand .prod .n{font-size:16px; font-weight:700;}
+  .brand .mark{font-size:14px; font-weight:700; padding-right:14px; border-right:1px solid var(--ivory);}
+  .brand .prod .n{font-size:16px; font-weight:700; line-height:1.15;}
   .brand .prod .s{font-size:12px; color:var(--ink);}
   .topbar .spacer{flex:1;}
-  .role-chip{display:none; font-size:12.5px; color:var(--ink);
-    background:var(--sand); border-radius:999px; padding:5px 12px;}
+  .role-chip{display:none; font-size:12.5px; color:var(--ink); background:var(--sand); border-radius:999px; padding:5px 12px;}
   body[data-screen="journey"] .role-chip, body[data-screen="done"] .role-chip{display:inline-flex;}
   .tlink{font-size:13.5px;}
-  .lrs-badge{display:none; align-items:center; gap:10px; font-size:12px;
-    padding:5px 12px; border:1px solid var(--ivory); border-radius:999px; background:var(--white);}
+  .lrs-badge{display:none; align-items:center; gap:10px; font-size:12px; padding:5px 12px;
+    border:1px solid var(--ivory); border-radius:999px; background:var(--white);}
   .lrs-badge .lrs-dot{width:9px; height:9px; border-radius:50%; background:#c9c6c2; flex:none;}
-  .lrs-badge.live .lrs-dot{background:var(--ok);}
-  .lrs-badge.sending .lrs-dot{background:var(--warn);}
+  .lrs-badge.live .lrs-dot{background:var(--ok);} .lrs-badge.sending .lrs-dot{background:var(--warn);}
   .lrs-badge.error .lrs-dot{background:var(--err);}
-  .lrs-badge .lrs-status{font-weight:700; color:var(--graphite);}
+  .lrs-badge .lrs-status{font-weight:700;}
   .lrs-badge .lrs-email{color:var(--ink); border-left:1px solid var(--ivory); padding-left:10px;
     max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .lrs-badge .lrs-count{color:var(--ink);}
 
-  /* ---------- Email gate ---------- */
+  /* Gate */
   .gate-wrap{min-height:64vh; display:grid; place-items:center; padding:48px 0;}
-  .gate{max-width:480px; width:100%; background:var(--white); border:1px solid var(--ivory);
-    border-radius:14px; padding:38px 34px;}
+  .gate{max-width:480px; width:100%; background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:38px 34px;}
   .gate h1{font-size:32px; margin:6px 0 0;}
   .gate .rule{width:52px; height:3px; background:var(--orange); margin:14px 0 16px; border-radius:2px;}
   .gate p{font-size:14.5px; color:var(--ink); margin:0 0 20px;}
   .gate-form{display:flex; gap:10px; flex-wrap:wrap;}
-  .gate-form input{flex:1; min-width:220px; padding:12px 14px; border:1px solid var(--ink);
-    border-radius:8px; font-family:inherit; font-size:14.5px; background:var(--white); color:var(--graphite);}
-  .gate-form input:focus{outline:2px solid var(--blue); outline-offset:1px;}
-  .gate-err{color:var(--err); font-size:13px; margin:12px 0 0; display:none;}
-  .gate-err.show{display:block;}
+  .gate-form input{flex:1; min-width:220px; padding:12px 14px; border:1px solid var(--ink); border-radius:8px;
+    font-family:inherit; font-size:14.5px; background:var(--white); color:var(--graphite);}
+  .gate-err{color:var(--err); font-size:13px; margin:12px 0 0; display:none;} .gate-err.show{display:block;}
   .gate-note{font-size:12px; color:var(--ink); margin:18px 0 0; line-height:1.5;}
 
-  /* ---------- Landing ---------- */
+  /* Landing */
   .landing{padding:52px 0 72px;}
   .landing .hero{max-width:720px;}
-  .landing h1{font-size:40px; line-height:1.1; margin:8px 0 0;}
-  .landing h1 em{font-style:italic;}
+  .landing h1{font-size:40px; line-height:1.1; margin:8px 0 0;} .landing h1 em{font-style:italic;}
   .landing .rule{width:60px; height:3px; background:var(--orange); margin:16px 0 18px; border-radius:2px;}
   .landing .lede{font-size:17px; color:var(--ink); margin:0; max-width:60ch;}
   .cards{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:38px 0 0;}
-  .card{background:var(--white); border:1px solid var(--ivory); border-radius:14px;
-    padding:26px; display:flex; flex-direction:column; gap:12px;
-    transition:box-shadow .15s, transform .15s;}
+  .card{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:26px;
+    display:flex; flex-direction:column; gap:12px; transition:box-shadow .15s, transform .15s;}
   .card:hover{box-shadow:0 8px 26px rgba(30,30,30,.08); transform:translateY(-2px);}
-  .card h3{margin:0; font-size:20px;}
-  .card .who{font-size:14px; color:var(--ink); margin:0;}
-  .card ul{margin:2px 0 0; padding-left:18px; font-size:14px; color:var(--ink);}
-  .card ul li{margin:4px 0;}
+  .card h3{margin:0; font-size:20px;} .card .who{font-size:14px; color:var(--ink); margin:0;}
+  .card ul{margin:2px 0 0; padding-left:18px; font-size:14px; color:var(--ink);} .card ul li{margin:4px 0;}
   .card .go{margin-top:auto; align-self:flex-start;}
 
-  /* ---------- Journey ---------- */
-  .journey{display:grid; grid-template-columns:280px minmax(0,1fr) 300px; gap:30px;
+  /* Journey: wide, center-dominant, side panels pushed out */
+  .journey{display:grid; grid-template-columns:220px minmax(0,1fr) 250px; gap:46px;
     padding:34px 0 72px; align-items:start;}
-  .rail{background:var(--white); border:1px solid var(--ivory); border-radius:14px;
-    padding:22px; position:sticky; top:82px;}
-  .rail .rtitle{font-size:15px; font-weight:700; margin:0 0 2px;}
-  .rail .rmeta{font-size:12.5px; color:var(--ink); margin:0 0 14px;}
+  .rail{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:22px; position:sticky; top:82px;}
+  .rail .rtitle{font-size:15px; font-weight:700; margin:0 0 2px;} .rail .rmeta{font-size:12.5px; color:var(--ink); margin:0 0 14px;}
   .bar{height:6px; background:var(--sand); border-radius:999px; overflow:hidden; margin-bottom:18px;}
   .bar > span{display:block; height:100%; background:var(--orange); transition:width .25s;}
   .steps{list-style:none; margin:0; padding:0;}
-  .steps li{display:flex; gap:12px; align-items:flex-start; padding:10px 8px;
-    border-radius:8px; cursor:pointer;}
-  .steps li:hover{background:var(--paper);}
-  .steps li.active{background:var(--paper);}
-  .steps li .num{flex:none; width:24px; height:24px; border-radius:50%;
-    border:1.5px solid var(--ivory); display:grid; place-items:center;
-    font-size:12px; color:var(--ink); background:var(--white); margin-top:1px; font-weight:700;}
+  .steps li{display:flex; gap:12px; align-items:flex-start; padding:10px 8px; border-radius:8px; cursor:pointer;}
+  .steps li:hover,.steps li.active{background:var(--paper);}
+  .steps li .num{flex:none; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--ivory);
+    display:grid; place-items:center; font-size:12px; color:var(--ink); background:var(--white); margin-top:1px; font-weight:700;}
   .steps li.active .num{border-color:var(--orange); color:var(--graphite);}
   .steps li.done .num{background:var(--ink); border-color:var(--ink); color:#fff;}
   .steps li .stxt{font-size:13.5px; line-height:1.35; color:var(--graphite);}
 
-  .stage{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:34px 38px;}
-  .stage h2{font-size:28px; margin:8px 0 12px;}
-  .stage .narr{font-size:16px; color:var(--ink); margin:0 0 22px; max-width:64ch;}
+  .stage{background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:38px 44px;}
+  .stage h2{font-size:30px; margin:8px 0 16px;}
+  .section-body{font-size:16px; color:var(--graphite); max-width:70ch;}
+  .section-body p{margin:0 0 14px; color:var(--ink);}
+  .section-body h4{font-size:14.5px; margin:20px 0 8px; color:var(--graphite);}
+  .section-body ul{margin:0 0 18px; padding-left:20px;}
+  .section-body li{margin:6px 0; color:var(--ink);}
+  .more-line{font-size:14.5px; color:var(--ink); margin:6px 0 16px;
+    padding:12px 16px; background:var(--paper); border:1px solid var(--ivory); border-radius:10px;}
 
-  /* ---------- Embeds ---------- */
-  .embed{margin:0 0 16px; border:1px solid var(--ivory); border-radius:12px; overflow:hidden; background:var(--white);}
+  /* Embeds */
+  .embed{margin:0 0 8px; border:1px solid var(--ivory); border-radius:12px; overflow:hidden; background:var(--white);}
   .embed.video .vwrap{padding:56.25% 0 0 0; position:relative;}
   .embed.video iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
-  .embed.doc iframe{display:block; width:100%; height:720px; border:0;}
-  .embed.placeholder{border-style:dashed; background:var(--sand);}
-  .ph-inner{padding:44px 34px; min-height:240px; display:flex; flex-direction:column;
-    gap:8px; justify-content:center; align-items:flex-start;}
-  .ph-label{font-size:12.5px; color:var(--ink);}
-  .ph-title{font-family:var(--serif); font-size:24px; color:var(--graphite);}
-  .ph-note{font-size:13.5px; color:var(--ink);}
+  .embed.pdf{background:var(--white);}
+  .pdfbar{display:flex; align-items:center; justify-content:center; gap:16px; padding:10px 12px;
+    border-bottom:1px solid var(--ivory); background:var(--paper);}
+  .pdfbar button{background:var(--white); border:1px solid var(--ink); color:var(--graphite);
+    border-radius:7px; padding:7px 14px; font-size:13px; font-weight:700;}
+  .pdfbar button:disabled{opacity:.4; cursor:not-allowed;}
+  .pdfcount{font-size:13px; color:var(--ink); min-width:110px; text-align:center;}
+  .pdfstage{display:flex; justify-content:center; padding:18px; background:var(--sand); min-height:300px;}
+  #pdfcanvas{max-width:100%; height:auto; box-shadow:0 3px 14px rgba(30,30,30,.12); background:#fff;}
+  .pdferr{padding:40px; color:var(--ink); font-size:14px; text-align:center;}
 
   .stage-foot{display:flex; align-items:center; gap:14px; margin-top:22px; flex-wrap:wrap;}
-  .dl-group{margin-left:auto; display:inline-flex; gap:18px; align-items:center; flex-wrap:wrap;}
-  .dl{font-size:13px; color:var(--blue);}
-  .dl::before{content:"\2193"; font-weight:700; margin-right:5px;}
 
-  /* ---------- Finder (browse by concern) ---------- */
-  .finder{border:1px solid var(--ivory); border-radius:14px; background:var(--white);
-    overflow:hidden; position:sticky; top:82px;}
-  .finder-head{width:100%; display:flex; align-items:center; gap:14px; text-align:left;
-    background:none; border:none; padding:16px 18px;}
+  /* Finder */
+  .finder{border:1px solid var(--ivory); border-radius:14px; background:var(--white); overflow:hidden; position:sticky; top:82px;}
+  .finder-head{width:100%; display:flex; align-items:center; gap:14px; text-align:left; background:none; border:none; padding:16px 18px;}
   .finder-head:hover{background:var(--paper);}
   .fh-txt{display:flex; flex-direction:column; flex:1;}
-  .fh-title{font-size:14.5px; font-weight:700; color:var(--graphite);}
-  .fh-sub{font-size:12.5px; color:var(--ink); margin-top:2px;}
-  .finder .chev{font-size:13px; color:var(--ink); flex:none;}
-  .finder-body{display:none; padding:2px 18px 18px; border-top:1px solid var(--ivory);}
-  .finder.open .finder-body{display:block;}
-  .cgroup{padding:14px 0; border-bottom:1px solid var(--ivory);}
-  .cgroup:last-child{border-bottom:none;}
+  .fh-title{font-size:14.5px; font-weight:700;} .fh-sub{font-size:12.5px; color:var(--ink); margin-top:2px;}
+  .finder .chev{font-size:13px; color:var(--ink);}
+  .finder-body{display:none; padding:2px 18px 18px; border-top:1px solid var(--ivory);} .finder.open .finder-body{display:block;}
+  .cgroup{padding:14px 0; border-bottom:1px solid var(--ivory);} .cgroup:last-child{border-bottom:none;}
   .clabel{display:block; font-size:12px; color:var(--ink); margin-bottom:10px;}
   .chips{display:flex; flex-wrap:wrap; gap:8px;}
-  .chip{font-size:13px; color:var(--graphite); background:var(--white);
-    border:1px solid var(--ivory); border-radius:999px; padding:7px 14px;}
+  .chip{font-size:13px; color:var(--graphite); background:var(--white); border:1px solid var(--ivory); border-radius:999px; padding:7px 14px;}
   .chip:hover{border-color:var(--blue); color:var(--blue);}
   .chip.active{border-color:var(--blue); color:var(--blue); box-shadow:inset 0 0 0 1px var(--blue);}
 
-  /* ---------- Completion ---------- */
-  .done-wrap{max-width:660px; margin:64px auto; text-align:center; background:var(--white);
-    border:1px solid var(--ivory); border-radius:14px; padding:48px 44px;}
-  .done-wrap .check{width:60px; height:60px; border-radius:50%; background:var(--ink); color:#fff;
-    display:grid; place-items:center; margin:0 auto 20px; font-size:28px;}
-  .done-wrap h2{font-size:28px; margin:0 0 12px;}
-  .done-wrap p{color:var(--ink); margin:0 auto 24px; max-width:48ch; font-size:15.5px;}
+  /* Completion */
+  .done-wrap{max-width:660px; margin:64px auto; text-align:center; background:var(--white); border:1px solid var(--ivory); border-radius:14px; padding:48px 44px;}
+  .done-wrap .check{width:60px; height:60px; border-radius:50%; background:var(--ink); color:#fff; display:grid; place-items:center; margin:0 auto 20px; font-size:28px;}
+  .done-wrap h2{font-size:28px; margin:0 0 12px;} .done-wrap p{color:var(--ink); margin:0 auto 24px; max-width:48ch; font-size:15.5px;}
   .next-cards{display:grid; grid-template-columns:1fr 1fr; gap:14px; text-align:left; margin:26px 0 30px;}
   .next-cards .nc{border:1px solid var(--ivory); border-radius:10px; padding:16px 18px;}
-  .next-cards .nc .h{font-weight:700; font-size:14.5px; margin:0 0 4px;}
-  .next-cards .nc .d{font-size:13px; color:var(--ink); margin:0;}
+  .next-cards .nc .h{font-weight:700; font-size:14.5px; margin:0 0 4px;} .next-cards .nc .d{font-size:13px; color:var(--ink); margin:0;}
+  .switch{margin-top:16px; font-size:13px; background:none; border:none; color:var(--blue); padding:0;} .switch:hover{text-decoration:underline;}
 
-  .switch{margin-top:16px; font-size:13px; background:none; border:none; color:var(--blue); padding:0;}
-  .switch:hover{text-decoration:underline;}
-
-  @media (max-width:860px){
-    .cards{grid-template-columns:1fr;}
-    .journey{grid-template-columns:1fr;}
+  @media (max-width:1024px){
+    .journey{grid-template-columns:1fr; gap:26px;}
     .rail,.finder{position:static;}
+    .cards{grid-template-columns:1fr;}
     .next-cards{grid-template-columns:1fr;}
     .landing h1{font-size:30px;}
-    .embed.doc iframe{height:560px;}
+    .stage{padding:28px 24px;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none !important;}}
   :focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
 </style>
 </head>
 <body data-screen="gate">
+  <div class="testbar">Testing environment. Do not enter a real email address. Use a placeholder such as fakename@email.com.</div>
   <header class="topbar">
     <div class="inner">
       <div class="brand">
         <span class="mark">Elsevier</span>
-        <div class="prod">
-          <div class="n">ClinicalKey AI</div>
-          <div class="s">Customer Hub</div>
-        </div>
+        <div class="prod"><div class="n">ClinicalKey AI</div><div class="s">Customer Hub</div></div>
       </div>
       <span class="role-chip" id="roleChip">&mdash;</span>
       <span class="spacer"></span>
       <span id="lrs-badge" class="lrs-badge">
-        <span class="lrs-dot"></span>
-        <span class="lrs-status">LRS idle</span>
-        <span class="lrs-email"></span>
-        <span class="lrs-count">0 sent</span>
+        <span class="lrs-dot"></span><span class="lrs-status">LRS idle</span>
+        <span class="lrs-email"></span><span class="lrs-count">0 sent</span>
       </span>
       <a class="tlink" href="https://www.elsevier.support/clinicalkeyai" target="_blank" rel="noopener">Need help? Support Center</a>
     </div>
   </header>
-
   <main id="app"></main>
 
 <script>
 (function(){
   "use strict";
 
-  /* ---------- Journey data ---------- */
   var VIMEO = "https://player.vimeo.com/video/1210247360?h=cb3fa7da1d&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479";
+  var GUIDE_GS  = "https://media.ffycdn.net/eu/elsevier/d/DVDiXShQwr4sPD69";
+  var GUIDE_CME = "https://media.ffycdn.net/eu/elsevier/d/8gqsRamQhZhd4cUy";
+
+  var bodyGetStarted =
+    '<p>ClinicalKey AI pairs trusted, evidence-based content with generative AI, so you can turn a clinical question into a clear, cited answer at the point of care. This section orients you to the landing page and to asking questions that get the best response.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Ask in natural language. Phrase a full, specific clinical question the way you would ask a colleague, rather than entering keywords.</li>'+
+    '<li>Be explicit. Name the demographic, condition, or drug you care about, since responses are succinct and cover a broad population by default.</li>'+
+    '<li>Set the population focus using the All Ages, Adult, or Pediatrics toggle.</li>'+
+    '<li>Verify the answer. Expand Show Details on any citation to read the source excerpt, and use the suggested follow-up questions to refine.</li>'+
+    '<li>Save or share a question, and switch to a supported language when the toggle appears.</li>'+
+    '<li>Avoid protected health information, using it as a calculator or scoring tool, asking about medication cost or coverage, or asking for the single best choice. Ask for options with rationale instead.</li>'+
+    '</ul>';
+
+  var bodyCme =
+    '<p>Every AI-generated response in ClinicalKey AI is worth 0.5 CME credit. The CME icon shows your running total and launches the CME/MOC dashboard, where you can redeem CME and submit MOC to specialty boards.</p>'+
+    '<h4>How to complete the key actions</h4><ul>'+
+    '<li>Earn: each ClinicalKey AI response accrues 0.5 CME automatically; the badge updates when the home page refreshes.</li>'+
+    '<li>Redeem CME: open Redeem CME, select your Conversational Search queries, click Assign, add a reason and applied use, then Continue and complete the required seven-question evaluation.</li>'+
+    '<li>Track: review redeemed credits and print transcripts from the Overview or CME History pages.</li>'+
+    '<li>Set up MOC: under Manage Boards, add each specialty board and its Board ID (up to eight ACCME-accredited boards).</li>'+
+    '<li>Redeem MOC: select the boards, attest that the content is relevant to your specialty, then submit and check status under MOC History.</li>'+
+    '</ul>';
+
+  var bodyIntro = '<p>A short overview of what ClinicalKey AI is, how it fits into clinical workflow, and what to expect from the rest of this path. Watch this first for context.</p>';
+  function pending(t){ return '<p>An overview and the key actions for this section are in progress and will appear here once the '+t+' is added.</p>'; }
 
   var shared = [
     {title:"Introducing ClinicalKey AI", type:"video", cat:"Get oriented", concern:"What is ClinicalKey AI?",
-     embed:{kind:"vimeo", src:VIMEO},
-     narr:"Start here. A short overview of what ClinicalKey AI does and where it fits in your day, so the rest of this path has context."},
+     embed:{kind:"vimeo", src:VIMEO}, body:bodyIntro},
     {title:"Get Started Guide", type:"doc", cat:"Get oriented", concern:"How do I get started?",
-     embed:{kind:"frontify", src:"https://media.ffycdn.net/eu/elsevier/d/DVDiXShQwr4sPD69"},
-     narr:"The essentials to get up and running. Read it here; we will point you to the next step when you are done."},
+     embed:{kind:"pdf", src:GUIDE_GS}, guide:GUIDE_GS, body:bodyGetStarted},
     {title:"Frequently Asked Questions", type:"doc", cat:"Get oriented", concern:"Common first questions",
-     narr:"Quick answers to the questions most customers raise in their first week."}
+     body:pending("FAQ document")}
   ];
-
   var userSteps = [
-    {title:"User Guide", type:"doc", cat:"Use it day to day", concern:"Everyday tasks, step by step",
-     narr:"A deeper walkthrough of the everyday tasks you will use most."},
-    {title:"Setting Up Conversation Sharing", type:"doc", cat:"Use it day to day", concern:"Share a conversation with a colleague",
-     narr:"Share a ClinicalKey AI conversation with a colleague when a question needs a second set of eyes."},
+    {title:"User Guide", type:"doc", cat:"Use it day to day", concern:"Everyday tasks, step by step", body:pending("User Guide")},
+    {title:"Setting Up Conversation Sharing", type:"doc", cat:"Use it day to day", concern:"Share a conversation with a colleague", body:pending("Conversation Sharing guide")},
     {title:"Earn CME & Redeem MOC Credit", type:"doc", cat:"Credit & records", concern:"Earn CME / redeem MOC credit",
-     embed:{kind:"frontify", src:"https://media.ffycdn.net/eu/elsevier/d/8gqsRamQhZhd4cUy"},
-     narr:"Turn the searches you already run into CME and MOC credit, with no extra coursework required."},
-    {title:"App Guide", type:"doc", cat:"Use it day to day", concern:"Use it on mobile",
-     narr:"Use ClinicalKey AI on mobile, at the point of care."}
+     embed:{kind:"pdf", src:GUIDE_CME}, guide:GUIDE_CME, body:bodyCme},
+    {title:"App Guide", type:"doc", cat:"Use it day to day", concern:"Use it on mobile", body:pending("App Guide")}
   ];
-
   var adminSteps = [
-    {title:"User Guide", type:"doc", cat:"Know the product", concern:"See what my users see",
-     narr:"Know exactly what your users will see, so you can answer their questions with confidence."},
-    {title:"Implementation Toolkit", type:"doc", cat:"Deploy & configure", concern:"Plan our rollout",
-     narr:"Everything you need to plan and run your rollout in one place."},
-    {title:"SAML SSO Guide", type:"doc", cat:"Deploy & configure", concern:"Configure single sign-on (SSO)",
-     narr:"Configure single sign-on so your users get in without a separate password."},
-    {title:"Epic Integration with SSO", type:"doc", cat:"Deploy & configure", concern:"Set up Epic integration",
-     narr:"Connect ClinicalKey AI inside Epic, in the workflow clinicians already use."},
-    {title:"Link Resolver Setup", type:"doc", cat:"Deploy & configure", concern:"Connect our library holdings",
-     narr:"Connect users to your library's full-text holdings from within ClinicalKey AI."}
+    {title:"User Guide", type:"doc", cat:"Know the product", concern:"See what my users see", body:pending("User Guide")},
+    {title:"Implementation Toolkit", type:"doc", cat:"Deploy & configure", concern:"Plan our rollout", body:pending("Implementation Toolkit")},
+    {title:"SAML SSO Guide", type:"doc", cat:"Deploy & configure", concern:"Configure single sign-on (SSO)", body:pending("SAML SSO Guide")},
+    {title:"Epic Integration with SSO", type:"doc", cat:"Deploy & configure", concern:"Set up Epic integration", body:pending("Epic Integration guide")},
+    {title:"Link Resolver Setup", type:"doc", cat:"Deploy & configure", concern:"Connect our library holdings", body:pending("Link Resolver Setup guide")}
   ];
 
   var journeys = {
@@ -266,18 +248,13 @@
   };
 
   var state = { screen:"gate", role:null, idx:0, done:{}, indexOpen:false, email:null, sent:0, lrsStatus:"idle" };
-
   var app = document.getElementById("app");
   var roleChip = document.getElementById("roleChip");
 
-  /* ================= xAPI / SCORM Cloud LRS ================= */
-  /* Sandbox credentials for the prototype. For production, move sending behind
-     a server-side proxy so the secret is not exposed in client-side code. */
-  var LRS = { endpoint:"https://cloud.scorm.com/lrs/O3BIJIXPN6/sandbox/",
-              key:"ltXfHLwdS_KWopX2Gso", secret:"wUXpqaFhHALMow-3Bxo" };
+  /* ---- xAPI ---- */
+  var LRS = { endpoint:"https://cloud.scorm.com/lrs/O3BIJIXPN6/sandbox/", key:"ltXfHLwdS_KWopX2Gso", secret:"wUXpqaFhHALMow-3Bxo" };
   var AUTH = "Basic " + btoa(LRS.key + ":" + LRS.secret);
-  var ACT_BASE = "https://elsevier-health.github.io/REPO-NAME/";  /* update to the real Pages path */
-
+  var ACT_BASE = "https://elsevier-health.github.io/REPO-NAME/";
   var VERBS = {
     initialized:{id:"http://adlnet.gov/expapi/verbs/initialized",display:{"en-US":"initialized"}},
     selected:{id:"http://id.tincanapi.com/verb/selected",display:{"en-US":"selected"}},
@@ -285,219 +262,196 @@
     completed:{id:"http://adlnet.gov/expapi/verbs/completed",display:{"en-US":"completed"}},
     downloaded:{id:"http://id.tincanapi.com/verb/downloaded",display:{"en-US":"downloaded"}}
   };
-  function actor(){ return { objectType:"Agent", name: state.email || "Anonymous",
-    mbox:"mailto:" + (state.email || "anonymous@example.com") }; }
-  function activity(idPath, name){ return { objectType:"Activity", id: ACT_BASE + idPath,
-    definition:{ name:{"en-US":name} } }; }
+  function actor(){ return { objectType:"Agent", name:state.email||"Anonymous", mbox:"mailto:"+(state.email||"anonymous@example.com") }; }
+  function activity(p,n){ return { objectType:"Activity", id:ACT_BASE+p, definition:{name:{"en-US":n}} }; }
   function slug(x){ return String(x).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
-
   var badgeEl = document.getElementById("lrs-badge");
-  function setLrs(s){ state.lrsStatus = s; updateBadge(); }
+  function setLrs(s){ state.lrsStatus=s; updateBadge(); }
   function updateBadge(){
     if(!badgeEl) return;
-    if(state.email){ badgeEl.style.display = "inline-flex"; }
-    badgeEl.className = "lrs-badge" + (state.lrsStatus !== "idle" ? " " + state.lrsStatus : "");
-    badgeEl.querySelector(".lrs-status").textContent =
-      state.lrsStatus === "live" ? "LRS live" : state.lrsStatus === "sending" ? "Sending"
-      : state.lrsStatus === "error" ? "LRS error" : "LRS idle";
-    badgeEl.querySelector(".lrs-email").textContent = state.email || "";
-    badgeEl.querySelector(".lrs-count").textContent = state.sent + " sent";
+    if(state.email) badgeEl.style.display="inline-flex";
+    badgeEl.className="lrs-badge"+(state.lrsStatus!=="idle"?" "+state.lrsStatus:"");
+    badgeEl.querySelector(".lrs-status").textContent = state.lrsStatus==="live"?"LRS live":state.lrsStatus==="sending"?"Sending":state.lrsStatus==="error"?"LRS error":"LRS idle";
+    badgeEl.querySelector(".lrs-email").textContent = state.email||"";
+    badgeEl.querySelector(".lrs-count").textContent = state.sent+" sent";
   }
-  function xapi(verb, object){
-    setLrs("sending");
-    sendStatement({ actor:actor(), verb:verb, object:object }).then(function(ok){
-      if(ok){ state.sent++; setLrs("live"); } else { setLrs("error"); }
-    }).catch(function(){ setLrs("error"); });
-  }
+  function xapi(v,o){ setLrs("sending"); sendStatement({actor:actor(),verb:v,object:o}).then(function(ok){ if(ok){state.sent++;setLrs("live");}else setLrs("error"); }).catch(function(){ setLrs("error"); }); }
   function sendStatement(stmt){
-    return fetch(LRS.endpoint + "statements", {
-      method:"POST",
-      headers:{ "Authorization":AUTH, "Content-Type":"application/json", "X-Experience-API-Version":"1.0.3" },
-      body: JSON.stringify(stmt)
-    }).then(function(r){ return r.ok; }).catch(function(){
-      var p = new URLSearchParams();
-      p.set("method","POST"); p.set("Authorization",AUTH);
-      p.set("X-Experience-API-Version","1.0.3"); p.set("Content-Type","application/json");
-      p.set("content", JSON.stringify(stmt));
-      return fetch(LRS.endpoint + "statements", {
-        method:"POST", headers:{ "Content-Type":"application/x-www-form-urlencoded" }, body:p.toString()
-      }).then(function(r2){ return r2.ok; }).catch(function(){ return false; });
+    return fetch(LRS.endpoint+"statements",{method:"POST",headers:{"Authorization":AUTH,"Content-Type":"application/json","X-Experience-API-Version":"1.0.3"},body:JSON.stringify(stmt)})
+      .then(function(r){return r.ok;}).catch(function(){
+        var p=new URLSearchParams(); p.set("method","POST"); p.set("Authorization",AUTH); p.set("X-Experience-API-Version","1.0.3"); p.set("Content-Type","application/json"); p.set("content",JSON.stringify(stmt));
+        return fetch(LRS.endpoint+"statements",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:p.toString()}).then(function(r2){return r2.ok;}).catch(function(){return false;});
+      });
+  }
+
+  /* ---- PDF.js paginated viewer ---- */
+  var pdfLib=null, pdfDoc=null, pdfPage=1, pdfTotal=0, pdfReqUrl=null;
+  function ensurePdfLib(){
+    if(pdfLib) return Promise.resolve(pdfLib);
+    return new Promise(function(res,rej){
+      var s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+      s.onload=function(){ pdfLib=window.pdfjsLib; pdfLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"; res(pdfLib); };
+      s.onerror=rej; document.head.appendChild(s);
     });
   }
-  /* ========================================================= */
+  function setupPdf(url){
+    pdfReqUrl=url; pdfDoc=null; pdfPage=1; pdfTotal=0;
+    var cnt=document.getElementById("pdfcount"); if(cnt) cnt.textContent="Loading";
+    ensurePdfLib().then(function(lib){ return lib.getDocument(url).promise; }).then(function(doc){
+      if(pdfReqUrl!==url) return;
+      pdfDoc=doc; pdfTotal=doc.numPages; pdfPage=1; renderPdfPage();
+    }).catch(function(){
+      var stage=document.getElementById("pdfstage");
+      if(stage) stage.innerHTML='<div class="pdferr">This document could not be displayed inline here. <a href="'+url+'" target="_blank" rel="noopener">Open it in a new tab</a>.</div>';
+      var cnt=document.getElementById("pdfcount"); if(cnt) cnt.textContent="";
+    });
+  }
+  function renderPdfPage(){
+    if(!pdfDoc) return;
+    var canvas=document.getElementById("pdfcanvas"), stage=document.getElementById("pdfstage"), cnt=document.getElementById("pdfcount");
+    if(!canvas||!stage) return;
+    pdfDoc.getPage(pdfPage).then(function(page){
+      var avail=stage.clientWidth-36; if(avail<280) avail=280; if(avail>860) avail=860;
+      var base=page.getViewport({scale:1}); var scale=avail/base.width;
+      var vp=page.getViewport({scale:scale});
+      var dpr=window.devicePixelRatio||1;
+      var ctx=canvas.getContext("2d");
+      canvas.width=Math.floor(vp.width*dpr); canvas.height=Math.floor(vp.height*dpr);
+      canvas.style.width=vp.width+"px"; canvas.style.height=vp.height+"px";
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      page.render({canvasContext:ctx, viewport:vp});
+      if(cnt) cnt.textContent="Page "+pdfPage+" of "+pdfTotal;
+      var pv=document.getElementById("pdfprev"), nx=document.getElementById("pdfnext");
+      if(pv) pv.disabled=(pdfPage<=1); if(nx) nx.disabled=(pdfPage>=pdfTotal);
+    });
+  }
 
-  /* ---------- Screens ---------- */
+  /* ---- Screens ---- */
   function gate(){
     return '<div class="wrap gate-wrap"><div class="gate">'+
       '<p class="eyebrow">ClinicalKey AI · Onboarding and enablement</p>'+
       '<h1>Welcome</h1><div class="rule"></div>'+
-      '<p>Enter your email to begin. We use it to record your progress as you move through the hub.</p>'+
-      '<div class="gate-form">'+
-        '<input id="gate-email" type="email" placeholder="you@institution.org" aria-label="Email" />'+
-        '<button class="btn-primary" data-action="submit-email">Begin</button>'+
-      '</div>'+
+      '<div class="gate-test"><strong>For testing only.</strong> Please do not enter a real email address. Use a placeholder such as fakename@email.com, so we do not send real data to the learning-record store.</div>'+
+      '<p>Enter an email to begin. It is used only to label your progress as you move through the hub.</p>'+
+      '<div class="gate-form"><input id="gate-email" type="email" placeholder="fakename@email.com" aria-label="Email" />'+
+      '<button class="btn-primary" data-action="submit-email">Begin</button></div>'+
       '<p id="gate-err" class="gate-err">Please enter a valid email address.</p>'+
-      '<p class="gate-note">Prototype. The badge in the top right shows the live learning-record connection, your email, and how many statements have been sent.</p>'+
+      '<p class="gate-note">Prototype. The badge in the top right shows the live learning-record connection, the email entered, and how many statements have been sent.</p>'+
     '</div></div>';
   }
-
   function landing(){
-    return '<div class="wrap landing">'+
-      '<div class="hero">'+
-        '<p class="eyebrow">ClinicalKey AI · Onboarding and enablement</p>'+
-        '<h1>Where do I <em>start</em></h1><div class="rule"></div>'+
-        '<p class="lede">A guided path to getting value from ClinicalKey AI, built for customers setting things up on their own. Pick the path that fits you and we will take it step by step.</p>'+
-      '</div>'+
+    return '<div class="wrap landing"><div class="hero">'+
+      '<p class="eyebrow">ClinicalKey AI · Onboarding and enablement</p>'+
+      '<h1>Where do I <em>start</em></h1><div class="rule"></div>'+
+      '<p class="lede">A guided path to getting value from ClinicalKey AI, built for customers setting things up on their own. Pick the path that fits you and we will take it step by step.</p></div>'+
       '<div class="cards">'+
-        card("admin","I am an administrator","Setting up and deploying ClinicalKey AI for my institution.",
-          ["Plan and run your rollout","Configure SSO, Epic, and link resolver","Support your users"])+
-        card("user","I am a user or clinician","Using ClinicalKey AI in my own practice.",
-          ["Run better clinical queries","Share conversations and earn CME/MOC","Use it on mobile"])+
-      '</div>'+
-    '</div>';
+        card("admin","I am an administrator","Setting up and deploying ClinicalKey AI for my institution.",["Plan and run your rollout","Configure SSO, Epic, and link resolver","Support your users"])+
+        card("user","I am a user or clinician","Using ClinicalKey AI in my own practice.",["Run better clinical queries","Share conversations and earn CME/MOC","Use it on mobile"])+
+      '</div></div>';
   }
-  function card(role,title,who,bullets){
-    return '<div class="card"><h3>'+title+'</h3><p class="who">'+who+'</p>'+
-      '<ul>'+bullets.map(function(b){return "<li>"+b+"</li>";}).join("")+'</ul>'+
+  function card(role,title,who,b){
+    return '<div class="card"><h3>'+title+'</h3><p class="who">'+who+'</p><ul>'+b.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul>'+
       '<button class="btn-primary go" data-action="choose-role" data-role="'+role+'">Start this path</button></div>';
   }
-
   function journey(){
-    var j = journeys[state.role], steps = j.steps, total = steps.length;
-    var doneCount = steps.filter(function(_,i){return state.done[i];}).length;
-    var pct = Math.round((doneCount/total)*100);
-
-    var rail = '<aside class="rail"><p class="rtitle">'+j.label+'</p>'+
-      '<p class="rmeta">'+doneCount+' of '+total+' complete</p>'+
+    var j=journeys[state.role], steps=j.steps, total=steps.length;
+    var dc=steps.filter(function(_,i){return state.done[i];}).length, pct=Math.round((dc/total)*100);
+    var rail='<aside class="rail"><p class="rtitle">'+j.label+'</p><p class="rmeta">'+dc+' of '+total+' complete</p>'+
       '<div class="bar"><span style="width:'+pct+'%"></span></div><ul class="steps">'+
-      steps.map(function(s,i){
-        var cls=(i===state.idx?"active ":"")+(state.done[i]?"done":"");
-        return '<li class="'+cls+'" data-action="goto-step" data-idx="'+i+'" tabindex="0" role="button">'+
-          '<span class="num">'+(state.done[i]?"\u2713":(i+1))+'</span>'+
-          '<span class="stxt">'+s.title+'</span></li>';
-      }).join("")+'</ul>'+
-      '<button class="switch" data-action="restart">Switch path</button></aside>';
-
-    var s = steps[state.idx], isFirst=state.idx===0, isLast=state.idx===total-1;
-    var stage = '<section class="stage">'+
-      '<p class="eyebrow">Step '+(state.idx+1)+' of '+total+'</p>'+
-      '<h2>'+s.title+'</h2><p class="narr">'+s.narr+'</p>'+ media(s)+
-      '<div class="stage-foot">'+
-        '<button class="btn-ghost" data-action="prev"'+(isFirst?" disabled":"")+'>Previous</button>'+
-        '<button class="btn-primary" data-action="next">'+(isLast?"Finish path":"Mark done and continue")+'</button>'+
-        '<span class="dl-group">'+
-          '<a class="dl" href="#" data-action="download" data-kind="section">Download this section</a>'+
-          '<a class="dl" href="#" data-action="download" data-kind="full">Download full PDF</a>'+
-        '</span>'+
-      '</div></section>';
-
-    return '<div class="wrap"><div class="journey">'+rail+stage+finder(steps)+'</div></div>';
+      steps.map(function(s,i){ var cls=(i===state.idx?"active ":"")+(state.done[i]?"done":"");
+        return '<li class="'+cls+'" data-action="goto-step" data-idx="'+i+'" tabindex="0" role="button"><span class="num">'+(state.done[i]?"\u2713":(i+1))+'</span><span class="stxt">'+s.title+'</span></li>'; }).join("")+
+      '</ul><button class="switch" data-action="restart">Switch path</button></aside>';
+    var s=steps[state.idx], isFirst=state.idx===0, isLast=state.idx===total-1;
+    var moreLine = s.guide ? '<p class="more-line">Looking for something more? <a data-action="open-guide" data-guide="'+s.guide+'" href="'+s.guide+'" target="_blank" rel="noopener">Download this guide for additional reference</a>.</p>' : '';
+    var stage='<section class="stage"><p class="eyebrow">Step '+(state.idx+1)+' of '+total+'</p><h2>'+s.title+'</h2>'+
+      '<div class="section-body">'+(s.body||"")+'</div>'+ moreLine + media(s)+
+      '<div class="stage-foot"><button class="btn-ghost" data-action="prev"'+(isFirst?" disabled":"")+'>Previous</button>'+
+      '<button class="btn-primary" data-action="next">'+(isLast?"Finish path":"Mark done and continue")+'</button></div></section>';
+    return '<div class="jwrap"><div class="journey">'+rail+stage+finder(steps)+'</div></div>';
   }
-
   function media(s){
     if(s.embed && s.embed.kind==="vimeo"){
-      return '<div class="embed video"><div class="vwrap">'+
-        '<iframe src="'+s.embed.src+'" title="'+s.title+'" frameborder="0" '+
-        'allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" '+
+      return '<div class="embed video"><div class="vwrap"><iframe src="'+s.embed.src+'" title="'+s.title+'" frameborder="0" '+
+        'allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen '+
         'referrerpolicy="strict-origin-when-cross-origin"></iframe></div></div>';
     }
-    if(s.embed && s.embed.kind==="frontify"){
-      return '<div class="embed doc"><iframe src="'+s.embed.src+'" title="'+s.title+'" loading="lazy"></iframe></div>';
+    if(s.embed && s.embed.kind==="pdf"){
+      return '<div class="embed pdf"><div class="pdfbar">'+
+        '<button id="pdfprev" data-action="pdf-prev">Previous</button>'+
+        '<span class="pdfcount" id="pdfcount">Loading</span>'+
+        '<button id="pdfnext" data-action="pdf-next">Next</button></div>'+
+        '<div class="pdfstage" id="pdfstage"><canvas id="pdfcanvas"></canvas></div></div>';
     }
-    return '<div class="embed placeholder"><div class="ph-inner">'+
-      '<span class="ph-label">Embedded resource</span>'+
-      '<span class="ph-title">'+s.title+'</span>'+
-      '<span class="ph-note">Live asset renders here once its link is added.</span></div></div>';
+    return '<div class="embed" style="border-style:dashed;background:var(--sand)"><div style="padding:40px 34px;min-height:180px;display:flex;flex-direction:column;gap:8px;justify-content:center">'+
+      '<span style="font-size:12.5px;color:var(--ink)">Embedded resource</span>'+
+      '<span class="serif" style="font-size:22px">'+s.title+'</span>'+
+      '<span style="font-size:13.5px;color:var(--ink)">Live asset renders here once its link is added.</span></div></div>';
   }
-
   function finder(steps){
-    var order=["Get oriented","Deploy & configure","Know the product","Use it day to day","Credit & records"];
-    var groups={};
+    var order=["Get oriented","Deploy & configure","Know the product","Use it day to day","Credit & records"], groups={};
     steps.forEach(function(s,i){ (groups[s.cat]=groups[s.cat]||[]).push({s:s,i:i}); });
     var body=order.filter(function(c){return groups[c];}).map(function(c){
-      var chips=groups[c].map(function(o){
-        return '<button class="chip'+(o.i===state.idx?" active":"")+'" data-action="goto-step" data-idx="'+o.i+'">'+o.s.concern+'</button>';
-      }).join("");
+      var chips=groups[c].map(function(o){ return '<button class="chip'+(o.i===state.idx?" active":"")+'" data-action="goto-step" data-idx="'+o.i+'">'+o.s.concern+'</button>'; }).join("");
       return '<div class="cgroup"><span class="clabel">'+c+'</span><div class="chips">'+chips+'</div></div>';
     }).join("");
-    return '<div class="finder'+(state.indexOpen?" open":"")+'">'+
-      '<button class="finder-head" data-action="toggle-index" aria-expanded="'+(state.indexOpen?"true":"false")+'">'+
-        '<span class="fh-txt"><span class="fh-title">Looking for something specific?</span>'+
-        '<span class="fh-sub">Jump straight to a topic and land on the right step</span></span>'+
-        '<span class="chev">'+(state.indexOpen?"\u25be":"\u25b8")+'</span></button>'+
-      '<div class="finder-body">'+body+'</div></div>';
+    return '<div class="finder'+(state.indexOpen?" open":"")+'"><button class="finder-head" data-action="toggle-index" aria-expanded="'+(state.indexOpen?"true":"false")+'">'+
+      '<span class="fh-txt"><span class="fh-title">Looking for something specific?</span><span class="fh-sub">Jump straight to a topic and land on the right step</span></span>'+
+      '<span class="chev">'+(state.indexOpen?"\u25be":"\u25b8")+'</span></button><div class="finder-body">'+body+'</div></div>';
   }
-
   function done(){
     var j=journeys[state.role];
     return '<div class="wrap"><div class="done-wrap"><div class="check">\u2713</div>'+
       '<h2>You have completed the '+j.label.toLowerCase()+'</h2>'+
       '<p>That is the core of getting going with ClinicalKey AI. Here is where to go from here.</p>'+
-      '<div class="next-cards">'+
-        '<div class="nc"><p class="h">Keep exploring</p><p class="d">Revisit any step from the path whenever you need a refresher.</p></div>'+
-        '<div class="nc"><p class="h">Hit a snag?</p><p class="d">The Support Center handles account, access, and troubleshooting questions.</p></div>'+
-      '</div><button class="switch" data-action="restart">Back to start</button></div></div>';
+      '<div class="next-cards"><div class="nc"><p class="h">Keep exploring</p><p class="d">Revisit any step from the path whenever you need a refresher.</p></div>'+
+      '<div class="nc"><p class="h">Hit a snag?</p><p class="d">The Support Center handles account, access, and troubleshooting questions.</p></div></div>'+
+      '<button class="switch" data-action="restart">Back to start</button></div></div>';
   }
 
-  /* ---------- Render + events ---------- */
   function render(){
     document.body.setAttribute("data-screen", state.screen);
-    if(state.role){ roleChip.textContent = journeys[state.role].label; }
-    if(state.screen==="gate") app.innerHTML = gate();
-    else if(state.screen==="landing") app.innerHTML = landing();
-    else if(state.screen==="journey") app.innerHTML = journey();
-    else app.innerHTML = done();
+    if(state.role) roleChip.textContent = journeys[state.role].label;
+    if(state.screen==="gate") app.innerHTML=gate();
+    else if(state.screen==="landing") app.innerHTML=landing();
+    else if(state.screen==="journey") app.innerHTML=journey();
+    else app.innerHTML=done();
     updateBadge();
+    if(state.screen==="journey"){
+      var cs=journeys[state.role].steps[state.idx];
+      if(cs.embed && cs.embed.kind==="pdf") setupPdf(cs.embed.src);
+    }
     window.scrollTo({top:0,behavior:"auto"});
   }
 
   function handle(action, el){
     if(action==="submit-email"){
-      var input=document.getElementById("gate-email"), val=input?input.value.trim():"";
-      var at=val.indexOf("@"), dot=val.lastIndexOf(".");
-      if(!(at>0 && dot>at+1 && dot<val.length-1)){ var e=document.getElementById("gate-err"); if(e) e.classList.add("show"); return; }
-      state.email=val; state.screen="landing";
-      xapi(VERBS.initialized, activity("hub","ClinicalKey AI Customer Hub"));
-      render(); return;
+      var i=document.getElementById("gate-email"), v=i?i.value.trim():"", at=v.indexOf("@"), dot=v.lastIndexOf(".");
+      if(!(at>0 && dot>at+1 && dot<v.length-1)){ var e=document.getElementById("gate-err"); if(e) e.classList.add("show"); return; }
+      state.email=v; state.screen="landing"; xapi(VERBS.initialized, activity("hub","ClinicalKey AI Customer Hub")); render(); return;
     }
-    if(action==="choose-role"){
-      state.role=el.getAttribute("data-role"); state.idx=0; state.done={}; state.screen="journey";
-      xapi(VERBS.selected, activity("path/"+state.role, journeys[state.role].label));
-      render(); return;
-    }
-    if(action==="goto-step"){
-      state.idx=parseInt(el.getAttribute("data-idx"),10);
-      var gs=journeys[state.role].steps[state.idx];
-      xapi(VERBS.experienced, activity("path/"+state.role+"/step/"+slug(gs.title), gs.title));
-      render(); return;
-    }
-    if(action==="next"){
-      var steps=journeys[state.role].steps, total=steps.length, d=steps[state.idx];
-      state.done[state.idx]=true;
-      xapi(VERBS.completed, activity("path/"+state.role+"/step/"+slug(d.title), d.title));
-      if(state.idx<total-1){ state.idx++; render(); }
-      else { state.screen="done"; xapi(VERBS.completed, activity("path/"+state.role, journeys[state.role].label)); render(); }
-      return;
-    }
+    if(action==="choose-role"){ state.role=el.getAttribute("data-role"); state.idx=0; state.done={}; state.screen="journey";
+      xapi(VERBS.selected, activity("path/"+state.role, journeys[state.role].label)); render(); return; }
+    if(action==="goto-step"){ state.idx=parseInt(el.getAttribute("data-idx"),10);
+      var gs=journeys[state.role].steps[state.idx]; xapi(VERBS.experienced, activity("path/"+state.role+"/step/"+slug(gs.title), gs.title)); render(); return; }
+    if(action==="next"){ var steps=journeys[state.role].steps, total=steps.length, d=steps[state.idx];
+      state.done[state.idx]=true; xapi(VERBS.completed, activity("path/"+state.role+"/step/"+slug(d.title), d.title));
+      if(state.idx<total-1){ state.idx++; render(); } else { state.screen="done"; xapi(VERBS.completed, activity("path/"+state.role, journeys[state.role].label)); render(); } return; }
     if(action==="prev"){ if(state.idx>0){ state.idx--; render(); } return; }
     if(action==="restart"){ state.screen="landing"; state.role=null; state.idx=0; state.done={}; render(); return; }
     if(action==="toggle-index"){ state.indexOpen=!state.indexOpen; render(); return; }
-    if(action==="download"){
-      var kind=el.getAttribute("data-kind")==="full"?"full-pdf":"section";
-      var ds=journeys[state.role]?journeys[state.role].steps[state.idx]:null;
-      xapi(VERBS.downloaded, activity("download/"+kind+"/"+(ds?slug(ds.title):"item"),
-        (kind==="full-pdf"?"Full PDF: ":"Section: ")+(ds?ds.title:"")));
-      return;
+    if(action==="pdf-prev"){ if(pdfDoc && pdfPage>1){ pdfPage--; renderPdfPage(); } return; }
+    if(action==="pdf-next"){ if(pdfDoc && pdfPage<pdfTotal){ pdfPage++; renderPdfPage(); } return; }
+    if(action==="open-guide"){
+      var url=el.getAttribute("data-guide"), ds=journeys[state.role]?journeys[state.role].steps[state.idx]:null;
+      xapi(VERBS.downloaded, activity("guide/"+(ds?slug(ds.title):"item"), "Guide: "+(ds?ds.title:"")));
+      window.open(url,"_blank","noopener"); return;
     }
   }
 
-  document.addEventListener("click", function(e){
-    var el=e.target.closest("[data-action]"); if(!el) return; e.preventDefault();
-    handle(el.getAttribute("data-action"), el);
-  });
-  document.addEventListener("keydown", function(e){
-    if((e.key==="Enter"||e.key===" ") && e.target.matches('.steps li[data-action]')){ e.preventDefault(); handle("goto-step", e.target); }
-  });
+  document.addEventListener("click", function(e){ var el=e.target.closest("[data-action]"); if(!el) return; e.preventDefault(); handle(el.getAttribute("data-action"), el); });
+  document.addEventListener("keydown", function(e){ if((e.key==="Enter"||e.key===" ") && e.target.matches('.steps li[data-action]')){ e.preventDefault(); handle("goto-step", e.target); } });
+  var rz; window.addEventListener("resize", function(){ clearTimeout(rz); rz=setTimeout(function(){ if(pdfDoc && state.screen==="journey"){ var cs=journeys[state.role].steps[state.idx]; if(cs.embed&&cs.embed.kind==="pdf") renderPdfPage(); } },150); });
 
   render();
 })();
